@@ -19,7 +19,8 @@ class MainActivity : AppCompatActivity() {
         rollsLeftText.text = "Rolls left: $rollsLeft"
 
         val diceImageViews = listOf<ImageView>(img_dice_1, img_dice_2, img_dice_3, img_dice_4, img_dice_5, img_dice_6)
-        val yahtzee = Yahtzee(rollsLeft, diceImageViews)
+        val yahtzee = Yahtzee(diceImageViews)
+
         yahtzee.rollDice()
 
         rollButton.setOnClickListener {
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             yahtzee.rollDice()
+
             rollsLeft -= 1
             rollsLeftText.text = "Rolls left: $rollsLeft"
         }

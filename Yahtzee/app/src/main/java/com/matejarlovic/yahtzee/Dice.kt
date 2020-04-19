@@ -8,10 +8,10 @@ import androidx.core.view.marginStart
 class Dice(_index: Int, _imageView: ImageView) {
 
     var isHolding: Boolean = false
+    var currentValue: Int = rollDice()
 
     private val index: Int = _index
     private var imageView: ImageView? = _imageView
-    private var currentValue: Int = rollDice()
 
     init {
         isHolding = false
@@ -22,7 +22,7 @@ class Dice(_index: Int, _imageView: ImageView) {
             param.setMargins(10,10,10,10)
             imageView?.layoutParams = param
 
-            Log.d("TEST", "Dice: " + (index + 1).toString() + " | Value: " + currentValue.toString())
+            Log.d("Dice: " + (index + 1).toString(), "Value: $currentValue")
         }
     }
 
