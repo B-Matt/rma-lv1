@@ -1,18 +1,15 @@
 package com.matejarlovic.yahtzee
 
-import android.app.Activity
-import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
-import android.view.View
 import android.widget.ImageView
-import kotlinx.android.synthetic.main.activity_main.*
 
-class Yahtzee(_dicesImg: List<ImageView>) {
+class Yahtzee(_rolls: Int, _dicesImg: List<ImageView>) {
 
-    var dices: List<Dice> = List(6) { i -> Dice(i, _dicesImg[i]) }
-    var diceSprites = listOf(R.drawable.dice_1, R.drawable.dice_2, R.drawable.dice_3, R.drawable.dice_4, R.drawable.dice_5, R.drawable.dice_6)
+    private var currentRolls = _rolls;
+    private var dices: List<Dice> = List(6) { i -> Dice(i, _dicesImg[i]) }
+    private var diceSprites = listOf(R.drawable.dice_1, R.drawable.dice_2, R.drawable.dice_3, R.drawable.dice_4, R.drawable.dice_5, R.drawable.dice_6)
+
 
     fun rollDice() {
 
