@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Black Jack</string>
+    <string name="app_hit_button">Hit</string>
+    <string name="app_stand_button">Stand</string>
+</resources>
