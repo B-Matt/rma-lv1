@@ -1,3 +1,10 @@
+/*
+ * Created by Matej Arlović
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 4/20/20 6:36 PM
+ */
+
+
 package com.matejarlovic.blackjack
 
 import android.util.Log
@@ -6,6 +13,7 @@ class Hand() {
     private var cards: MutableList<Card> = mutableListOf()
     private var aceNum = 0
 
+    // Adds new card in player's hand
     fun addCard(card: Card) {
         if(card.value == 'a') {
             aceNum += 1
@@ -13,16 +21,12 @@ class Hand() {
         cards.add(card)
     }
 
+    // Returns private cards variable in player's hand
     fun cards(): MutableList<Card> {
         return cards
     }
 
-    fun print() {
-        for(card in cards) {
-            Log.d("HAND", card.toString())
-        }
-    }
-
+    // Returns value of all cards in player's hand
     fun value(): Int {
         val softValue = cards.map { it.value() }.sum()
         val hardValue = softValue + if (aceNum != 0) 10 else 0

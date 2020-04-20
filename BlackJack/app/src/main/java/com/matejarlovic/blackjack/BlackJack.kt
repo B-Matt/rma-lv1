@@ -1,3 +1,10 @@
+/*
+ * Created by Matej Arlović
+ * Copyright (c) 2020. All rights reserved.
+ * Last modified 4/20/20 6:36 PM
+ */
+
+
 package com.matejarlovic.blackjack
 
 import android.annotation.SuppressLint
@@ -11,37 +18,26 @@ import android.widget.TextView
 class BlackJack(private val activity: Activity) {
 
     private val deck = Deck()
-    private val dealer = Dealer(deck)
-    private val player = Player(deck)
+    private var dealer = Dealer(deck)
+    private var player = Player(deck)
     private var currentPlaying: Players? = player
-    private var playerPlays: Int = 1
 
     private val dealerScoreTxt = activity.findViewById<TextView>(R.id.dealerScore)
     private val playerScoreTxt = activity.findViewById<TextView>(R.id.playerScore)
 
     init {
-        player.hand.addCard(deck.deal())
-        dealer.hand.addCard(deck.deal())
-        player.hand.addCard(deck.deal())
-        dealer.hand.addCard(deck.deal())
+        // Set dealt cards in hands
+        player.hand.addCard(deck.deal(false))
+        dealer.hand.addCard(deck.deal(false))
+        player.hand.addCard(deck.deal(false))
+        dealer.hand.addCard(deck.deal(true))
 
-        showHand(R.id.dealerHand, dealer.hand.cards())
+        // Show cards in hand on the user interface
+        showHand(R.id.dealerHand, dealer.hand.cards(), true)
         dealerScoreTxt.text = "Dealer score: " + dealer.score(true)
 
-        showHand(R.id.playerHand,  player.hand.cards())
+        showHand(R.id.playerHand,  player.hand.cards(), true)
         playerScoreTxt.text = "Player score: " + player.score()
-
-        if(player.isBust()) {
-            playerScoreTxt.text = "Player score: " + player.score() + " - LOSER"
-            showHand(R.id.dealerHand, dealer.hand.cards())
-            dealerScoreTxt.text = "Dealer score: " + dealer.score(false)
-        }
-
-        if(dealer.isBust()) {
-            dealerScoreTxt.text = "Dealer score: " + dealer.score(false) + " - LOSER"
-            playerScoreTxt.text = "Player score: " + player.score() + " - WINNER"
-            showHand(R.id.dealerHand, dealer.hand.cards())
-        }
 
         // Stand Listeners
         player.onStandListener = {
@@ -54,20 +50,11 @@ class BlackJack(private val activity: Activity) {
 
         dealer.onStandListener = {
             if(currentPlaying == dealer) {
-                when {
-                    dealer.isBust() -> {
-                        dealerScoreTxt.text = "Dealer score: " + dealer.score(false) + " - LOSER"
-                        playerScoreTxt.text = "Player score: " + player.score() + " - WINNER"
-                    }
-                    dealer.score() > player.score() -> {
-                        dealerScoreTxt.text = "Dealer score: " + dealer.score(false) + " - WINNER"
-                        playerScoreTxt.text = "Player score: " + player.score() + " - LOSER"
-                    }
-                    else -> {
-                        dealerScoreTxt.text = "Dealer score: " + dealer.score(false) + " - LOSER"
-                        playerScoreTxt.text = "Player score: " + player.score() + " - WINNER"
-                    }
-                }
+                Log.d("DEALER", "Stands!")
+                showHand(R.id.dealerHand, dealer.hand.cards(), false)
+                writeWinner()
+                showHand(R.id.dealerHand, dealer.hand.cards(), false)
+                currentPlaying = null
             }
         }
 
@@ -75,13 +62,13 @@ class BlackJack(private val activity: Activity) {
         player.onHitListener = {
             if(currentPlaying == player) {
                 Log.d("PLAYER", "Hits!")
-                showHand(R.id.playerHand, player.hand.cards())
+                showHand(R.id.playerHand, player.hand.cards(), false)
                 playerScoreTxt.text = "Player score: " + player.score()
 
                 if (player.isBust()) {
                     playerScoreTxt.text = "Player score: " + player.score() + " - LOSER"
                     dealerScoreTxt.text = "Dealer score: " + dealer.score(false) + " - WINNER"
-                    showHand(R.id.dealerHand, dealer.hand.cards())
+                    showHand(R.id.dealerHand, dealer.hand.cards(), false)
                     currentPlaying = null
                 }
             }
@@ -90,48 +77,140 @@ class BlackJack(private val activity: Activity) {
         dealer.onHitListener = {
             if(currentPlaying == dealer) {
                 Log.d("DEALER", "Hits!")
-                showHand(R.id.dealerHand, dealer.hand.cards())
+                showHand(R.id.dealerHand, dealer.hand.cards(), true)
+                dealerScoreTxt.text = "Dealer score: " + dealer.score()
 
-                when {
-                    dealer.isBust() -> {
-                        dealerScoreTxt.text = "Dealer score: " + dealer.score(false) + " - LOSER"
-                        playerScoreTxt.text = "Player score: " + player.score() + " - WINNER"
-                    }
-                    dealer.score() > player.score() -> {
-                        dealerScoreTxt.text = "Dealer score: " + dealer.score(false) + " - WINNER"
-                        playerScoreTxt.text = "Player score: " + player.score() + " - LOSER"
-                    }
-                    else -> {
-                        dealerScoreTxt.text = "Dealer score: " + dealer.score(false) + " - LOSER"
-                        playerScoreTxt.text = "Player score: " + player.score() + " - WINNER"
-                    }
+                if (dealer.isBust()) {
+                    showHand(R.id.dealerHand, dealer.hand.cards(), false)
+                    writeWinner()
+                    showHand(R.id.dealerHand, dealer.hand.cards(), false)
+                    currentPlaying = null
+                } else {
+                    dealer.play()
                 }
-                showHand(R.id.dealerHand, dealer.hand.cards())
-                currentPlaying = null
+
             }
         }
     }
 
+    // Function that is called when player clicks "reset" button
+    fun reset() {
+        // Shuffle cards in deck
+        deck.shuffle()
+
+        // Reset player states
+        dealer = Dealer(deck)
+        player = Player(deck)
+        currentPlaying = player
+
+        // Set dealt cards in hands
+        player.hand.addCard(deck.deal(false))
+        dealer.hand.addCard(deck.deal(false))
+        player.hand.addCard(deck.deal(false))
+        dealer.hand.addCard(deck.deal(true))
+
+        // Show cards in hand on the user interface
+        showHand(R.id.dealerHand, dealer.hand.cards(), true)
+        dealerScoreTxt.text = "Dealer score: " + dealer.score(true)
+
+        showHand(R.id.playerHand,  player.hand.cards(), true)
+        playerScoreTxt.text = "Player score: " + player.score()
+
+        // Stand Listeners
+        player.onStandListener = {
+            if(currentPlaying == player) {
+                Log.d("PLAYER", "Stands!")
+                currentPlaying = dealer
+                dealer.play()
+            }
+        }
+
+        dealer.onStandListener = {
+            if(currentPlaying == dealer) {
+                Log.d("DEALER", "Stands!")
+                showHand(R.id.dealerHand, dealer.hand.cards(), false)
+                writeWinner()
+                showHand(R.id.dealerHand, dealer.hand.cards(), false)
+                currentPlaying = null
+            }
+        }
+
+        // Hit Listeners
+        player.onHitListener = {
+            if(currentPlaying == player) {
+                Log.d("PLAYER", "Hits!")
+                showHand(R.id.playerHand, player.hand.cards(), false)
+                playerScoreTxt.text = "Player score: " + player.score()
+
+                if (player.isBust()) {
+                    playerScoreTxt.text = "Player score: " + player.score() + " - LOSER"
+                    dealerScoreTxt.text = "Dealer score: " + dealer.score(false) + " - WINNER"
+                    showHand(R.id.dealerHand, dealer.hand.cards(), false)
+                    currentPlaying = null
+                }
+            }
+        }
+
+        dealer.onHitListener = {
+            if(currentPlaying == dealer) {
+                Log.d("DEALER", "Hits!")
+                showHand(R.id.dealerHand, dealer.hand.cards(), true)
+                dealerScoreTxt.text = "Dealer score: " + dealer.score()
+
+                if (dealer.isBust()) {
+                    showHand(R.id.dealerHand, dealer.hand.cards(), false)
+                    writeWinner()
+                    showHand(R.id.dealerHand, dealer.hand.cards(), false)
+                    currentPlaying = null
+                } else {
+                    dealer.play()
+                }
+
+            }
+        }
+    }
+
+    // Function that is called when player clicks "hit" button
     fun playerHit() {
         player.hit()
     }
 
+    // Function that is called when player clicks "stand" button
     fun playerStand() {
         player.stand()
     }
 
-    private fun showHand(handId: Int, cards: MutableList<Card>) {
-        val linearLayout = activity.findViewById<LinearLayout>(handId)
-        linearLayout.removeAllViews()
+    // Checks winning conditions and writes down who is winner
+    private fun writeWinner() {
+        when {
+            dealer.isBust() -> {
+                dealerScoreTxt.text = "Dealer score: " + dealer.score(false) + " - LOSER"
+                playerScoreTxt.text = "Player score: " + player.score() + " - WINNER"
+            }
+            dealer.score() > player.score() -> {
+                dealerScoreTxt.text = "Dealer score: " + dealer.score(false) + " - WINNER"
+                playerScoreTxt.text = "Player score: " + player.score() + " - LOSER"
+            }
+            else -> {
+                dealerScoreTxt.text = "Dealer score: " + dealer.score(false) + " - LOSER"
+                playerScoreTxt.text = "Player score: " + player.score() + " - WINNER"
+            }
+        }
+    }
+
+    // Shows cards in hand on the user interface
+    private fun showHand(handId: Int, cards: MutableList<Card>, checkHiding: Boolean) {
+        val layout = activity.findViewById<androidx.gridlayout.widget.GridLayout>(handId)
+        layout.removeAllViews()
 
         for(card in cards) {
             val imageView = ImageView(activity)
             val density = activity.resources.displayMetrics.density
-            imageView.layoutParams = LinearLayout.LayoutParams((90 * density).toInt(), (110 * density).toInt())
+            imageView.layoutParams = LinearLayout.LayoutParams((70 * density).toInt(), (90 * density).toInt())
 
-            val imgResId = activity.resources.getIdentifier(card.toString(), "drawable", activity.packageName)
+            val imgResId = activity.resources.getIdentifier(if(checkHiding && card.hidden) "h" else card.toString(), "drawable", activity.packageName)
             imageView.setImageResource(imgResId)
-            linearLayout?.addView(imageView)
+            layout?.addView(imageView)
         }
     }
 }
