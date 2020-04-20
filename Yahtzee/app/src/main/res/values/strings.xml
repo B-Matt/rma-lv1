@@ -1,6 +1,16 @@
 <resources>
     <string name="app_name">Yahtzee</string>
+
+    <!-- TextView Texts -->
     <string name="app_helper">Click on a dice to keep it!</string>
+
+    <!-- Button Texts -->
     <string name="app_roll_button">Roll</string>
+    <string name="app_hand_button">New hand</string>
+    <string name="app_game_button">New game</string>
+
+    <!-- Toast Texts -->
     <string name="app_no_rolls_toast">No rolls left!</string>
+    <string name="app_rolls_notice">You didn\'t roll dices!</string>
+    <string name="app_max_hands">You\'ve reached maximum numbers of hand!</string>
 </resources>
