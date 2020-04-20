@@ -157,7 +157,7 @@ class Yahtzee(_dicesImg: List<ImageView>) {
         val dicesFreq = dices.groupingBy { it.value }.eachCount().filter { it.value >= 3 }.toList()
         return try {
             val (key, value) = dicesFreq[0]
-            Pair("Three Of Kind", key * value)
+            Pair("Three Of Kind", (key * value) + 20)
         } catch (e: IndexOutOfBoundsException) {
             Pair("Three Of Kind", 0)
         }
@@ -167,7 +167,7 @@ class Yahtzee(_dicesImg: List<ImageView>) {
         val dicesFreq = dices.groupingBy { it.value }.eachCount().filter { it.value >= 4 }.toList()
         return try {
             val (key, value) = dicesFreq[0]
-            Pair("Four of Kind", key * value)
+            Pair("Four of Kind", (key * value) + 40)
         } catch (e: IndexOutOfBoundsException) {
             Pair("Four of Kind", 0)
         }
@@ -183,7 +183,7 @@ class Yahtzee(_dicesImg: List<ImageView>) {
         return try {
             val (keyThree, valueThree) = dicesThree[0]
             val (keyTwo, valueTwo) = dicesTwo[0]
-            Pair("Full House", keyThree * valueThree + keyTwo * valueTwo)
+            Pair("Full House", (keyThree * valueThree + keyTwo * valueTwo) + 30)
         } catch (e: IndexOutOfBoundsException) {
             Pair("Full House", 0)
         }
@@ -201,7 +201,7 @@ class Yahtzee(_dicesImg: List<ImageView>) {
             }
             sum += sorted[i].value
         }
-        return Pair("Straight", sum)
+        return Pair("Straight", sum + 10)
     }
 
     private fun findChance(): Pair<String, Int> {
@@ -210,6 +210,6 @@ class Yahtzee(_dicesImg: List<ImageView>) {
 
     private fun findYahtzee(): Pair<String, Int> {
         val dicesFreq = dices.groupingBy { it.value }.eachCount().filter { it.value >= dices.count() }.toList()
-        return Pair("Yahtzee", if(dicesFreq.count() > 0)  50 else 0)
+        return Pair("Yahtzee", if(dicesFreq.count() > 0)  dices.map { it.value }.sum() + 50 else 0)
     }
 }
