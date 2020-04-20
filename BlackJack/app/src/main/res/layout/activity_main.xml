@@ -33,7 +33,7 @@
             android:layout_weight="1"
             android:padding="5dp"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/card_club_10" />
+            app:srcCompat="@drawable/c2" />
 
         <ImageView
             android:id="@+id/dealer_card_2"
@@ -42,7 +42,7 @@
             android:layout_weight="1"
             android:padding="5dp"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/card_club_10" />
+            app:srcCompat="@drawable/c2" />
 
         <ImageView
             android:id="@+id/dealer_card_3"
@@ -52,7 +52,7 @@
             android:padding="5dp"
             android:scaleType="fitCenter"
             android:visibility="gone"
-            app:srcCompat="@drawable/card_club_10" />
+            app:srcCompat="@drawable/c2" />
 
         <ImageView
             android:id="@+id/dealer_card_4"
@@ -62,7 +62,7 @@
             android:padding="5dp"
             android:scaleType="fitCenter"
             android:visibility="gone"
-            app:srcCompat="@drawable/card_club_10" />
+            app:srcCompat="@drawable/c2" />
 
     </LinearLayout>
 
@@ -94,7 +94,7 @@
             android:layout_weight="1"
             android:padding="5dp"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/card_club_10" />
+            app:srcCompat="@drawable/c3" />
 
         <ImageView
             android:id="@+id/player_card_2"
@@ -103,7 +103,7 @@
             android:layout_weight="1"
             android:padding="5dp"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/card_club_10" />
+            app:srcCompat="@drawable/c3" />
 
         <ImageView
             android:id="@+id/player_card_3"
@@ -113,7 +113,7 @@
             android:padding="5dp"
             android:scaleType="fitCenter"
             android:visibility="gone"
-            app:srcCompat="@drawable/card_club_10" />
+            app:srcCompat="@drawable/c3" />
 
         <ImageView
             android:id="@+id/player_card_4"
@@ -123,7 +123,7 @@
             android:padding="5dp"
             android:scaleType="fitCenter"
             android:visibility="gone"
-            app:srcCompat="@drawable/card_club_10" />
+            app:srcCompat="@drawable/c3" />
 
     </LinearLayout>
 

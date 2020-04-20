@@ -10,7 +10,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
+        val deck = Deck()
+        val hand = Hand(deck.deal(), deck.deal())
+        hand.value()
 
         hitButton.setOnClickListener {
 
