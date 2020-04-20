@@ -3,6 +3,18 @@ package com.matejarlovic.blackjack
 import android.util.Log
 
 data class Card(val suit: Char, val value: Char) {
+
+    fun value(): Int {
+        return when (value) {
+            't' -> 10
+            'a' -> 1
+            'j' -> 12
+            'q' -> 13
+            'k' -> 14
+            else -> Character.getNumericValue(value)
+        }
+    }
+
     override fun toString(): String {
         return suit + "" + value
     }
@@ -16,7 +28,7 @@ class Deck {
 
     init {
         VALUES.forEach {  value -> SUITS.forEach { suit -> cards.add(Card(suit, value)) } }
-        cards.shuffled()
+        cards.shuffle()
     }
 
     fun deal(): Card {

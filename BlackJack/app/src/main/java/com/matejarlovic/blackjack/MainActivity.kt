@@ -2,6 +2,8 @@ package com.matejarlovic.blackjack
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageView
+import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -10,16 +12,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val deck = Deck()
-        val hand = Hand(deck.deal(), deck.deal())
-        hand.value()
+        val blackJack = BlackJack(this)
 
         hitButton.setOnClickListener {
-
+            blackJack.playerHit()
         }
 
         standButton.setOnClickListener {
-
+            blackJack.playerStand()
         }
     }
 }

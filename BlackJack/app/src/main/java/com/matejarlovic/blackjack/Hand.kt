@@ -2,14 +2,9 @@ package com.matejarlovic.blackjack
 
 import android.util.Log
 
-class Hand(card1: Card, card2: Card) {
+class Hand() {
     private var cards: MutableList<Card> = mutableListOf()
     private var aceNum = 0
-
-    init {
-        addCard(card1)
-        addCard(card2)
-    }
 
     fun addCard(card: Card) {
         if(card.value == 'a') {
@@ -18,8 +13,24 @@ class Hand(card1: Card, card2: Card) {
         cards.add(card)
     }
 
-    fun value() {
-        Log.d("CARD VALUE 1", cards[0].toString())
-        Log.d("CARD VALUE 2", cards[1].toString())
+    fun cards(): MutableList<Card> {
+        return cards
+    }
+
+    fun print() {
+        for(card in cards) {
+            Log.d("HAND", card.toString())
+        }
+    }
+
+    fun value(): Int {
+        val softValue = cards.map { it.value() }.sum()
+        val hardValue = softValue + if (aceNum != 0) 10 else 0
+
+        if(hardValue > 21) {
+            return hardValue
+        } else {
+            return softValue
+        }
     }
 }
