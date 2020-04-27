@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Famous People</string>
+
+    <!-- Main Activity -->
+    <string name="list_input">Input new people</string>
+
+    <!-- Input Activity -->
+    <string name="input_title">Famous People Input</string>
+    <string name="input_photo_title">Person\'s photo URL</string>
+    <string name="input_name_title">Person\'s name and surname</string>
+    <string name="input_birthdate_title">Person\'s birth date</string>
+    <string name="input_deathdate_title">Person\'s death date</string>
+    <string name="input_desc_title">Person\'s description</string>
+    <string name="input_quote_title">Quote from a person</string>
+    <string name="input_button_save">Save</string>
+    <string name="input_button_list">People List</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
