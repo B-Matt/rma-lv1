@@ -19,6 +19,16 @@ class PeopleRepository private constructor() {
         persons.add(person)
     }
 
+    fun length(): Int
+    {
+        return persons.size;
+    }
+
+    fun getPersons(): MutableList<InspiringPerson>
+    {
+        return persons;
+    }
+
     fun print()
     {
         for (i in persons)
