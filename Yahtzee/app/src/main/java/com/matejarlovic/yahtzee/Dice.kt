@@ -9,43 +9,37 @@ package com.matejarlovic.yahtzee
 import android.widget.ImageView
 import android.widget.LinearLayout
 
-class Dice(_imageView: ImageView) {
+class Dice() {
 
-    var isHolding: Boolean
-    var value: Int
-
-    private var imageView: ImageView? = _imageView
+    private var isHolding: Boolean
+    private var value: Int
 
     init {
         isHolding = false
-        value = rollDice()
-
-        imageView?.setOnClickListener {
-            isHolding = true
-
-            val param = imageView?.layoutParams as LinearLayout.LayoutParams
-            param.setMargins(10,10,10,10)
-            imageView?.layoutParams = param
-        }
+        value = 1;
+        rollDice()
     }
 
     // Gets random value for the dice in range from 1 to 6
-    fun rollDice(): Int {
+    fun rollDice() {
+        if(isHolding) {
+            return
+        }
         value = (1..6).random()
-        return value
+    }
+
+    // Returns current dice value
+    fun getValue(): Int {
+        return value;
+    }
+
+    // Prevents dice to change it's value
+    fun hold() {
+        isHolding = true;
     }
 
     // Reset dice state and margins
     fun resetDice() {
         isHolding = false
-
-        val param = imageView?.layoutParams as LinearLayout.LayoutParams
-        param.setMargins(0,0,0,0)
-        imageView?.layoutParams = param
-    }
-
-    // Changes bitmap inside ImageView with given sprite
-    fun setImageView(spriteId: Int) {
-        imageView?.setImageResource(spriteId)
     }
 }

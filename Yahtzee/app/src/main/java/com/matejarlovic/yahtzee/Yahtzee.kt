@@ -10,15 +10,14 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.ImageView
 
-class Yahtzee(_dicesImg: List<ImageView>) {
+class Yahtzee() {
 
     var diceRolled: ((Pair<String, Int>) -> Unit)? = null
     var scoreUpdated: ((Int) -> Unit)? = null
     var maxHands: (() -> Unit)? = null
 
-    private var overallScore: Int
+    private var overallScore: Int = 0
     private var dices: List<Dice>
-    private var diceDrawables: List<Int>
     private var scoreList: ArrayList<String>
     private lateinit var rollScore: Pair<String, Int>
 
@@ -27,8 +26,7 @@ class Yahtzee(_dicesImg: List<ImageView>) {
         scoreUpdated = null
 
         overallScore = 0
-        dices = List(6) { i -> Dice(_dicesImg[i]) }
-        diceDrawables = listOf(R.drawable.dice_1, R.drawable.dice_2, R.drawable.dice_3, R.drawable.dice_4, R.drawable.dice_5, R.drawable.dice_6)
+        dices = List(6) { i -> Dice() }
         scoreList = ArrayList(12)
     }
 
@@ -49,48 +47,29 @@ class Yahtzee(_dicesImg: List<ImageView>) {
             updateOverallScore(rollScore.second)
         }
 
-        for(dice in dices) {
-            dice.resetDice()
-        }
-        rollDice()
-    }
-
-    // Rolls dices every 10 times in 1 second (changes dice drawable every 100ms)
-    fun rollDice() {
         if(scoreList.count() >= 12) {
             maxHands?.invoke()
             return
         }
 
-        val rollAnimMaxDuration = 10
-        var rollAnimDuration = 0
-        val rollAnimHandler = Handler(Looper.getMainLooper())
-
-        rollAnimHandler.post(object : Runnable {
-            override fun run() {
-                rollAnimDuration += 1
-                updateDiceBitmap()
-
-                if(rollAnimDuration >= rollAnimMaxDuration) {
-                    val rollScore = calculateCurrentScore()
-                    updateRollScore(rollScore)
-                    diceRolled?.invoke(rollScore)
-                    rollAnimHandler.removeCallbacksAndMessages(null)
-                } else {
-                    rollAnimHandler.postDelayed(this, 100)
-                }
-            }
-        })
+        for(dice in dices) {
+            dice.resetDice()
+        }
     }
 
-    // Updates bitmap in every dice imageview shown in the activity (only if player is not holding that dice!)
-    fun updateDiceBitmap() {
-        for (dice in dices) {
-            if(!dice.isHolding) {
-                val value = dice.rollDice()
-                dice.setImageView(diceDrawables[value - 1])
-            }
-        }
+    // Returns dices list
+    fun getDices(): List<Dice> {
+        return dices
+    }
+
+    // Returns overall score in the game
+    fun getOverallScore(): Int {
+        return overallScore
+    }
+
+    // Sets hold state for the cube
+    fun hold(index: Int) {
+        this.dices[index].hold()
     }
 
     // Updates current best score in the roll
@@ -99,13 +78,12 @@ class Yahtzee(_dicesImg: List<ImageView>) {
     }
 
     // Updates overall score with a roll score
-    private fun updateOverallScore(score: Int) {
+    fun updateOverallScore(score: Int) {
         overallScore += score
-        scoreUpdated?.invoke(overallScore)
     }
 
     // Calculates best roll score that player didn't already took (if you take chance in first hand, in the second hand you can't take again chance)
-    private fun calculateCurrentScore(): Pair<String, Int> {
+    fun calculateCurrentScore(): Pair<String, Int> {
         val scores = ArrayList<Pair<String, Int>>(12)
 
         scores.add(findOnes())
@@ -129,32 +107,32 @@ class Yahtzee(_dicesImg: List<ImageView>) {
 
     // Find same values
     private fun findOnes(): Pair<String, Int> {
-        return Pair("Ones", dices.count { it.value == 1 } * 1)
+        return Pair("Ones", dices.count { it.getValue() == 1 } * 1)
     }
 
     private fun findTwos(): Pair<String, Int> {
-        return Pair("Twos", dices.count { it.value == 2 } * 2)
+        return Pair("Twos", dices.count { it.getValue() == 2 } * 2)
     }
 
     private fun findThrees(): Pair<String, Int> {
-        return Pair("Threes", dices.count { it.value == 3 } * 3)
+        return Pair("Threes", dices.count { it.getValue() == 3 } * 3)
     }
 
     private fun findFours(): Pair<String, Int> {
-        return Pair("Fours", dices.count { it.value == 4 } * 4)
+        return Pair("Fours", dices.count { it.getValue() == 4 } * 4)
     }
 
     private fun findFives(): Pair<String, Int> {
-        return Pair("Fives", dices.count { it.value == 5 } * 5)
+        return Pair("Fives", dices.count { it.getValue() == 5 } * 5)
     }
 
     private fun findSixes(): Pair<String, Int> {
-        return Pair("Sixes", dices.count { it.value == 6 } * 6)
+        return Pair("Sixes", dices.count { it.getValue() == 6 } * 6)
     }
 
     // Find two or more same cards
     private fun findThreeOfKind(): Pair<String, Int> {
-        val dicesFreq = dices.groupingBy { it.value }.eachCount().filter { it.value >= 3 }.toList()
+        val dicesFreq = dices.groupingBy { it.getValue() }.eachCount().filter { it.value >= 3 }.toList()
         return try {
             val (key, value) = dicesFreq[0]
             Pair("Three Of Kind", (key * value) + 20)
@@ -164,7 +142,7 @@ class Yahtzee(_dicesImg: List<ImageView>) {
     }
 
     private fun findFourOfKind(): Pair<String, Int> {
-        val dicesFreq = dices.groupingBy { it.value }.eachCount().filter { it.value >= 4 }.toList()
+        val dicesFreq = dices.groupingBy { it.getValue() }.eachCount().filter { it.value >= 4 }.toList()
         return try {
             val (key, value) = dicesFreq[0]
             Pair("Four of Kind", (key * value) + 40)
@@ -174,8 +152,8 @@ class Yahtzee(_dicesImg: List<ImageView>) {
     }
 
     private fun findFullHouse(): Pair<String, Int> {
-        var dicesThree = dices.groupingBy { it.value }.eachCount().filter { it.value >= 3 }.toList()
-        var dicesTwo = dices.groupingBy { it.value }.eachCount().filter { it.value >= 2 }.toList()
+        var dicesThree = dices.groupingBy { it.getValue() }.eachCount().filter { it.value >= 3 }.toList()
+        var dicesTwo = dices.groupingBy { it.getValue() }.eachCount().filter { it.value >= 2 }.toList()
 
         dicesThree = dicesThree.map { it }
         dicesTwo = dicesTwo.filter { it !in dicesThree }
@@ -191,25 +169,25 @@ class Yahtzee(_dicesImg: List<ImageView>) {
 
     private fun findStraight(): Pair<String, Int> {
 
-        val sorted = dices.sortedBy { it.value }
+        val sorted = dices.sortedBy { it.getValue() }
         var sum = 0
 
         for(i in 1 until sorted.count()) {
 
-            if(sorted[i].value != (sorted[i - 1].value + 1)) {
+            if(sorted[i].getValue() != (sorted[i - 1].getValue() + 1)) {
                 break
             }
-            sum += sorted[i].value
+            sum += sorted[i].getValue()
         }
         return Pair("Straight", sum + 10)
     }
 
     private fun findChance(): Pair<String, Int> {
-        return Pair("Chance", dices.map { it.value }.sum())
+        return Pair("Chance", dices.map { it.getValue() }.sum())
     }
 
     private fun findYahtzee(): Pair<String, Int> {
-        val dicesFreq = dices.groupingBy { it.value }.eachCount().filter { it.value >= dices.count() }.toList()
-        return Pair("Yahtzee", if(dicesFreq.count() > 0)  dices.map { it.value }.sum() + 50 else 0)
+        val dicesFreq = dices.groupingBy { it.getValue() }.eachCount().filter { it.value >= dices.count() }.toList()
+        return Pair("Yahtzee", if(dicesFreq.count() > 0)  dices.map { it.getValue() }.sum() + 50 else 0)
     }
 }
