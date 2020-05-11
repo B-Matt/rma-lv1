@@ -61,24 +61,32 @@ class MainActivity : AppCompatActivity() {
         newHandButton.setOnClickListener {
             // Reset Roll Counter
             rollsLeft = 3
-            rollsLeftText.text = "Rolls left: $rollsLeft"
-            scoreText.text = "Current Score: " + yahtzee.getOverallScore()
 
             // Roll Dices
             yahtzee.rollNewHand()
             resetDiceSize()
+            rollingAnim()
+
+            // Update User Interface
+            rollsLeftText.text = "Rolls left: $rollsLeft"
+            scoreText.text = "Current score: " + yahtzee.getOverallScore()
         }
 
         // Button callback listener. Called when player clicks new game button
         newGameButton.setOnClickListener {
 
             // Reset Roll Counter
+            yahtzee.setOverallScore(0)
             rollsLeft = 3
+
+            // Setup User Interface
+            scoreText.text = "Current score: " + yahtzee.getOverallScore()
             rollsLeftText.text = "Rolls left: $rollsLeft"
 
             // Roll Dices
             yahtzee.rollNewGame()
             resetDiceSize()
+            rollingAnim()
         }
     }
 

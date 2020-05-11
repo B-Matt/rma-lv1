@@ -43,6 +43,9 @@ class Yahtzee() {
     // Rolls dices for new hand (updates overall score with best roll score)
     fun rollNewHand() {
         if(rollScore.first != "None") {
+            if(scoreList.contains(rollScore.first)) {
+                return
+            }
             scoreList.add(rollScore.first)
             updateOverallScore(rollScore.second)
         }
@@ -60,6 +63,11 @@ class Yahtzee() {
     // Returns dices list
     fun getDices(): List<Dice> {
         return dices
+    }
+
+    // Sets overall score
+    fun setOverallScore(score: Int) {
+        overallScore = score
     }
 
     // Returns overall score in the game
