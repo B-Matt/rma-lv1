@@ -6,9 +6,6 @@
 
 package com.matejarlovic.yahtzee
 
-import android.widget.ImageView
-import android.widget.LinearLayout
-
 class Dice() {
 
     private var isHolding: Boolean
@@ -17,11 +14,12 @@ class Dice() {
     init {
         isHolding = false
         value = 1;
-        rollDice()
+
+        roll()
     }
 
     // Gets random value for the dice in range from 1 to 6
-    fun rollDice() {
+    fun roll() {
         if(isHolding) {
             return
         }
@@ -29,7 +27,7 @@ class Dice() {
     }
 
     // Returns current dice value
-    fun getValue(): Int {
+    fun value(): Int {
         return value;
     }
 
@@ -39,7 +37,7 @@ class Dice() {
     }
 
     // Reset dice state and margins
-    fun resetDice() {
+    fun reset() {
         isHolding = false
     }
 }

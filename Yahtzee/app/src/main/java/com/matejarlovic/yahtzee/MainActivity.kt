@@ -10,7 +10,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -131,8 +130,8 @@ class MainActivity : AppCompatActivity() {
     // Sets dices bitmap with a bitmap of random value
     private fun updateDiceBitmap() {
         for ((index, dice) in yahtzee.getDices().withIndex()) {
-            dice.rollDice()
-            diceImageViews[index].setImageResource(diceDrawables[dice.getValue() - 1])
+            dice.roll()
+            diceImageViews[index].setImageResource(diceDrawables[dice.value() - 1])
         }
     }
 

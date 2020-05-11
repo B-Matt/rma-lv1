@@ -6,10 +6,6 @@
 
 package com.matejarlovic.yahtzee
 
-import android.os.Handler
-import android.os.Looper
-import android.widget.ImageView
-
 class Yahtzee() {
 
     var diceRolled: ((Pair<String, Int>) -> Unit)? = null
@@ -56,7 +52,7 @@ class Yahtzee() {
         }
 
         for(dice in dices) {
-            dice.resetDice()
+            dice.reset()
         }
     }
 
@@ -115,32 +111,32 @@ class Yahtzee() {
 
     // Find same values
     private fun findOnes(): Pair<String, Int> {
-        return Pair("Ones", dices.count { it.getValue() == 1 } * 1)
+        return Pair("Ones", dices.count { it.value() == 1 } * 1)
     }
 
     private fun findTwos(): Pair<String, Int> {
-        return Pair("Twos", dices.count { it.getValue() == 2 } * 2)
+        return Pair("Twos", dices.count { it.value() == 2 } * 2)
     }
 
     private fun findThrees(): Pair<String, Int> {
-        return Pair("Threes", dices.count { it.getValue() == 3 } * 3)
+        return Pair("Threes", dices.count { it.value() == 3 } * 3)
     }
 
     private fun findFours(): Pair<String, Int> {
-        return Pair("Fours", dices.count { it.getValue() == 4 } * 4)
+        return Pair("Fours", dices.count { it.value() == 4 } * 4)
     }
 
     private fun findFives(): Pair<String, Int> {
-        return Pair("Fives", dices.count { it.getValue() == 5 } * 5)
+        return Pair("Fives", dices.count { it.value() == 5 } * 5)
     }
 
     private fun findSixes(): Pair<String, Int> {
-        return Pair("Sixes", dices.count { it.getValue() == 6 } * 6)
+        return Pair("Sixes", dices.count { it.value() == 6 } * 6)
     }
 
     // Find two or more same cards
     private fun findThreeOfKind(): Pair<String, Int> {
-        val dicesFreq = dices.groupingBy { it.getValue() }.eachCount().filter { it.value >= 3 }.toList()
+        val dicesFreq = dices.groupingBy { it.value() }.eachCount().filter { it.value >= 3 }.toList()
         return try {
             val (key, value) = dicesFreq[0]
             Pair("Three Of Kind", (key * value) + 20)
@@ -150,7 +146,7 @@ class Yahtzee() {
     }
 
     private fun findFourOfKind(): Pair<String, Int> {
-        val dicesFreq = dices.groupingBy { it.getValue() }.eachCount().filter { it.value >= 4 }.toList()
+        val dicesFreq = dices.groupingBy { it.value() }.eachCount().filter { it.value >= 4 }.toList()
         return try {
             val (key, value) = dicesFreq[0]
             Pair("Four of Kind", (key * value) + 40)
@@ -160,8 +156,8 @@ class Yahtzee() {
     }
 
     private fun findFullHouse(): Pair<String, Int> {
-        var dicesThree = dices.groupingBy { it.getValue() }.eachCount().filter { it.value >= 3 }.toList()
-        var dicesTwo = dices.groupingBy { it.getValue() }.eachCount().filter { it.value >= 2 }.toList()
+        var dicesThree = dices.groupingBy { it.value() }.eachCount().filter { it.value >= 3 }.toList()
+        var dicesTwo = dices.groupingBy { it.value() }.eachCount().filter { it.value >= 2 }.toList()
 
         dicesThree = dicesThree.map { it }
         dicesTwo = dicesTwo.filter { it !in dicesThree }
@@ -177,25 +173,25 @@ class Yahtzee() {
 
     private fun findStraight(): Pair<String, Int> {
 
-        val sorted = dices.sortedBy { it.getValue() }
+        val sorted = dices.sortedBy { it.value() }
         var sum = 0
 
         for(i in 1 until sorted.count()) {
 
-            if(sorted[i].getValue() != (sorted[i - 1].getValue() + 1)) {
+            if(sorted[i].value() != (sorted[i - 1].value() + 1)) {
                 break
             }
-            sum += sorted[i].getValue()
+            sum += sorted[i].value()
         }
         return Pair("Straight", sum + 10)
     }
 
     private fun findChance(): Pair<String, Int> {
-        return Pair("Chance", dices.map { it.getValue() }.sum())
+        return Pair("Chance", dices.map { it.value() }.sum())
     }
 
     private fun findYahtzee(): Pair<String, Int> {
-        val dicesFreq = dices.groupingBy { it.getValue() }.eachCount().filter { it.value >= dices.count() }.toList()
-        return Pair("Yahtzee", if(dicesFreq.count() > 0)  dices.map { it.getValue() }.sum() + 50 else 0)
+        val dicesFreq = dices.groupingBy { it.value() }.eachCount().filter { it.value >= dices.count() }.toList()
+        return Pair("Yahtzee", if(dicesFreq.count() > 0)  dices.map { it.value() }.sum() + 50 else 0)
     }
 }
