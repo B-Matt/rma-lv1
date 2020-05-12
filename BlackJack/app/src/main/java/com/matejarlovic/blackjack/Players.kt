@@ -7,7 +7,7 @@
 
 package com.matejarlovic.blackjack
 
-sealed class Players(protected val deck: Deck) {
+open class Players(protected val deck: Deck) {
     protected var score: Int = 0
     var hand = Hand()
     var onHitListener: (()->Unit)? = null
@@ -28,43 +28,5 @@ sealed class Players(protected val deck: Deck) {
     // Checks if player's score is above 21 and returns boolean
     fun isBust(): Boolean {
        return score > 21
-    }
-}
-
-class Player(deck: Deck): Players(deck) {
-    // Returns score of player's hand
-    fun score(): Int {
-        score = hand.value()
-        return score
-    }
-
-    // Add new card in player's hands, updates score and calls onHitListener for current player
-    override fun hit() {
-        hand.addCard(deck.deal(false))
-        score = hand.value()
-        onHitListener?.invoke()
-    }
-}
-
-class Dealer(deck: Deck): Players(deck) {
-    // Returns dealer's score if game is not hiding that information from player otherwise it only returns '?'
-    fun score(hidden: Boolean): String {
-        score = hand.value()
-        return if(hidden) "?" else score.toString()
-    }
-
-    // Returns dealer's score as integer
-    fun score(): Int {
-        score = hand.value()
-        return score
-    }
-
-    // Dealer's play function in which it decide if it wants to hit or stand
-    fun play() {
-        if(score <= 16) {
-            hit()
-        } else {
-            stand()
-        }
     }
 }

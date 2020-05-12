@@ -7,8 +7,6 @@
 
 package com.matejarlovic.blackjack
 
-import android.util.Log
-
 class Hand() {
     private var cards: MutableList<Card> = mutableListOf()
     private var aceNum = 0
@@ -28,7 +26,7 @@ class Hand() {
 
     // Returns value of all cards in player's hand
     fun value(): Int {
-        val softValue = cards.map { it.value() }.sum()
+        val softValue = cards.map { it.getValue() }.sum()
         val hardValue = softValue + if (aceNum != 0) 10 else 0
 
         if(hardValue > 21) {
