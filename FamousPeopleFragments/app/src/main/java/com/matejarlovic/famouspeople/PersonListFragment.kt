@@ -1,15 +1,18 @@
 package com.matejarlovic.famouspeople
 
+import android.app.Person
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_person_list.*
 
-class PersonListFragment : Fragment() {
+class PersonListFragment : Fragment(), PersonListAdapter.ContentListener {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,9 +28,12 @@ class PersonListFragment : Fragment() {
         setDefaultPeople()
 
         // Apply Person List Adapter to the view
-        personList.apply {
-            layoutManager = LinearLayoutManager(view.context)
-            adapter = PersonListAdapter()
+        personList.layoutManager = LinearLayoutManager(view.context)
+        personList.adapter = PersonListAdapter(this)
+
+        // Click Listeners
+        inputPeopleButton.setOnClickListener {
+            fragmentManager?.beginTransaction()?.replace(R.id.container, PersonInputFragment())?.commit()
         }
     }
 
@@ -126,5 +132,17 @@ class PersonListFragment : Fragment() {
                 ) as MutableList<PersonQuote>
             )
         )
+    }
+
+    override fun onItemClick(id: Int) {
+        Log.d("CLICK", "ID: $id")
+
+        val bundle = Bundle()
+        bundle.putInt("personId", id)
+
+        val editFragment = PersonEditFragment()
+        editFragment.arguments = bundle
+
+        fragmentManager?.beginTransaction()?.replace(R.id.container, editFragment)?.commit()
     }
 }

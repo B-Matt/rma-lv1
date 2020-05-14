@@ -1,7 +1,5 @@
 package com.matejarlovic.famouspeople
 
-import android.util.Log
-
 class PeopleRepository private constructor() {
 
     private val persons: MutableList<InspiringPerson> = mutableListOf()
@@ -19,6 +17,10 @@ class PeopleRepository private constructor() {
         persons.add(person)
     }
 
+    fun set(person: InspiringPerson, index: Int) {
+        persons[index] = person
+    }
+
     fun length(): Int
     {
         return persons.size;
@@ -27,5 +29,12 @@ class PeopleRepository private constructor() {
     fun getPersons(): MutableList<InspiringPerson>
     {
         return persons;
+    }
+
+    fun getPerson(index: Int?): InspiringPerson? {
+        if(index == null) {
+            return null
+        }
+        return persons[index]
     }
 }

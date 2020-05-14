@@ -1,18 +1,22 @@
 package com.matejarlovic.famouspeople
 
+import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.person_list_item.view.*
 
-class PersonListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>()
+class PersonListAdapter(val listener: ContentListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>()
 {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder
     {
         return PersonViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.person_list_item, parent, false))
@@ -28,7 +32,7 @@ class PersonListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>()
         when(holder)
         {
             is PersonViewHolder -> {
-                holder.bind(PeopleRepository.instance.getPersons().get(position))
+                holder.bind(PeopleRepository.instance.getPersons()[position], position, listener)
             }
         }
     }
@@ -39,7 +43,7 @@ class PersonListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>()
         private val personDates: TextView = itemView.personDates
         private val personDescription: TextView = itemView.personDescription
 
-        fun bind(person: InspiringPerson)
+        fun bind(person: InspiringPerson, personId: Int, listener: ContentListener)
         {
             personName.text = person.name
             personDates.text = person.lifeDates()
@@ -57,6 +61,14 @@ class PersonListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>()
             personPhoto.setOnClickListener {
                 Toast.makeText(itemView.context, person.quotes.shuffled().take(1)[0].quote, Toast.LENGTH_SHORT).show()
             }
+
+            itemView.setOnClickListener {
+                listener.onItemClick(personId)
+            }
         }
+    }
+
+    public interface ContentListener {
+        fun onItemClick(id: Int)
     }
 }

@@ -47,5 +47,9 @@ class PersonInputFragment : Fragment() {
 
             Toast.makeText(view.context, "You've saved that person in the repository!", Toast.LENGTH_SHORT).show()
         }
+
+        peopleListActivity.setOnClickListener {
+            fragmentManager?.beginTransaction()?.replace(R.id.container, PersonListFragment())?.commit()
+        }
     }
 }

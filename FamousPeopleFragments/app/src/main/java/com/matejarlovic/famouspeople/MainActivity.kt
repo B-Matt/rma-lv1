@@ -13,11 +13,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val adapter = MainViewPagerAdapter(supportFragmentManager)
-        adapter.addFragment(PersonListFragment(), "Famuous People List")
-        adapter.addFragment(PersonInputFragment(), "Famuous People Input")
-
-        personsPager.adapter = adapter
-        tabs.setupWithViewPager(personsPager)
+        supportFragmentManager.beginTransaction().replace(R.id.container, PersonListFragment()).commit()
     }
 }
