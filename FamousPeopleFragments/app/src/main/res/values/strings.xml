@@ -2,7 +2,10 @@
     <string name="app_name">Famous People</string>
 
     <!-- Main Activity -->
-    <string name="list_input">Input new people</string>
+    <string name="list_input">Input new man</string>
+    <string name="list_remove">Remove man</string>
+    <string name="list_remove_text">Remove</string>
+    <string name="list_help_remove">Click on man that you want to delete.</string>
 
     <!-- Input Activity -->
     <string name="input_title">Famous People Input</string>
