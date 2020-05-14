@@ -28,12 +28,4 @@ class PeopleRepository private constructor() {
     {
         return persons;
     }
-
-    fun print()
-    {
-        for (i in persons)
-        {
-            Log.d("Person", i.name + " | " + i.lifeDates() + " | " + i.description);
-        }
-    }
 }
