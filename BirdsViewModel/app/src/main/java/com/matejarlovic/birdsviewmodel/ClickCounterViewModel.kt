@@ -37,4 +37,8 @@ class ClickCounterViewModel: ViewModel() {
         this.background = color
         backgroundLiveData.value = color
     }
+
+    fun getColor(): Int {
+        return this.background
+    }
 }

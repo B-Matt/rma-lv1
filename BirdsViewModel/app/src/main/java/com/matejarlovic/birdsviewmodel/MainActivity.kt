@@ -3,9 +3,11 @@ package com.matejarlovic.birdsviewmodel
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.matejarlovic.birdsviewmodel.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -19,16 +21,18 @@ class MainActivity : AppCompatActivity() {
 
         // Init ViewModel
         viewModel = ViewModelProvider(this).get(ClickCounterViewModel::class.java)
+        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.setVariable(BR.counterViewModel, viewModel)
 
         // LiveData observers
         val countLiveData: LiveData<Int> = viewModel.getInitialCount()
         countLiveData.observe(this, Observer {
-            birdCounter.text = it.toString()
+            binding.birdCounter.text = it.toString()
         })
 
         val colorLiveData: LiveData<Int> = viewModel.getInitialColor()
         colorLiveData.observe(this, Observer {
-            mainLayout.setBackgroundColor(it)
+            binding.mainLayout.setBackgroundColor(it)
         })
 
         // Click Listeners
