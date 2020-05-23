@@ -1,0 +1,2 @@
+rootProject.name='Birds SharedPreferences'
+include ':app'
