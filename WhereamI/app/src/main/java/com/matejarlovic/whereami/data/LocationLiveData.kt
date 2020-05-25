@@ -3,11 +3,14 @@ package com.matejarlovic.whereami.data
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.lifecycle.LiveData
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import java.io.Serializable
 
 class LocationLiveData(context: Context) : LiveData<LocationModel>() {
 
@@ -65,7 +68,29 @@ class LocationLiveData(context: Context) : LiveData<LocationModel>() {
     }
 }
 
-data class LocationModel(
-    val longitude: Double,
-    val latitude: Double
-)
+class LocationModel(val longitude: Double, val latitude: Double): Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readDouble(),
+        parcel.readDouble()
+    ) {
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeDouble(longitude)
+        parcel.writeDouble(latitude)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<LocationModel> {
+        override fun createFromParcel(parcel: Parcel): LocationModel {
+            return LocationModel(parcel)
+        }
+
+        override fun newArray(size: Int): Array<LocationModel?> {
+            return arrayOfNulls(size)
+        }
+    }
+}

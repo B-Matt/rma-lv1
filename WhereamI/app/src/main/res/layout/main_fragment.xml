@@ -85,8 +85,7 @@
                     android:id="@+id/countryText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Hrvatska" />
+                    android:layout_weight="1" />
             </LinearLayout>
 
             <LinearLayout
@@ -105,8 +104,7 @@
                     android:id="@+id/placeText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Osijek" />
+                    android:layout_weight="1" />
             </LinearLayout>
 
             <LinearLayout
@@ -125,8 +123,7 @@
                     android:id="@+id/addressText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Mije Kišpatića 17" />
+                    android:layout_weight="1" />
             </LinearLayout>
         </LinearLayout>
 
