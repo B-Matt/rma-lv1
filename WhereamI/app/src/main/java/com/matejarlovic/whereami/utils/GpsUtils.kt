@@ -22,7 +22,6 @@ class GpsUtils(private val context: Context) {
     private val locationManager =
         context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-    private val LOCATION_REQUEST = 100
     private val GPS_REQUEST = 101
 
     init {

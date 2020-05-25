@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -45,6 +46,7 @@ class MapFragment : Fragment() {
             youMarker = googleMap.addMarker(
                 MarkerOptions().position(LatLng(0.0, 0.0)).title("You")
             )
+            setMapClickEvent()
         }
         return rootView
     }
@@ -67,5 +69,14 @@ class MapFragment : Fragment() {
                     youMarker.position = newPosition
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newPosition, 16f));
                 })
+    }
+
+    private fun setMapClickEvent() {
+        googleMap.setOnMapClickListener {
+            // TODO: Dodati sound
+            googleMap.addMarker(
+                MarkerOptions().position(it).title("Marker").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+            )
+        }
     }
 }
