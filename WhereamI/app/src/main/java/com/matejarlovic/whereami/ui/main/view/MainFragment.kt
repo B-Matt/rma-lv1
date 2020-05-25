@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Geocoder
 import android.os.Bundle
 import android.os.Handler
 import android.os.ResultReceiver
@@ -18,9 +17,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.SupportMapFragment
+import androidx.lifecycle.ViewModelProvider
 import com.matejarlovic.whereami.BR
 import com.matejarlovic.whereami.R
 import com.matejarlovic.whereami.data.AddressIntentService
@@ -33,16 +30,13 @@ import kotlinx.android.synthetic.main.main_fragment.*
 
 class MainFragment : Fragment() {
 
-    private lateinit var googleMap: GoogleMap
     private lateinit var viewModel: MainViewModel
     private lateinit var binding: ViewDataBinding
     private lateinit var resultReceiver: AddressResultReceiver
 
     private var isGSPEnabled = false
-    private var mapReady = false
 
     private val LOCATION_REQUEST = 100
-    private val GPS_REQUEST = 101
 
     companion object {
         fun newInstance() = MainFragment()
@@ -63,12 +57,6 @@ class MainFragment : Fragment() {
                 addressText.text = it?.get(2)
             })
         }
-
-        /*val mapFragment = childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
-        mapFragment.getMapAsync {
-            googleMap = it
-            mapReady = true
-        }*/
         return binding.root
     }
 
@@ -78,7 +66,7 @@ class MainFragment : Fragment() {
         val activity: FragmentActivity = activity ?: throw IllegalArgumentException("Activity is null!")
         val context = context ?: throw IllegalArgumentException("Context is null!")
 
-        viewModel = ViewModelProviders.of(
+        viewModel = ViewModelProvider(
             activity,
             ViewModelFactory(activity.application)
         ).get(MainViewModel::class.java)
