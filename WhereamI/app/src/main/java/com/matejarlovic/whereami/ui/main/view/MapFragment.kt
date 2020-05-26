@@ -6,6 +6,10 @@
 
 package com.matejarlovic.whereami.ui.main.view
 
+import android.media.AudioAttributes
+import android.media.AudioManager
+import android.media.SoundPool
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -35,6 +39,9 @@ class MapFragment : Fragment() {
     private lateinit var viewModel: MainViewModel
     private lateinit var googleMap: GoogleMap
     private lateinit var youMarker: Marker
+    private lateinit var soundPool: SoundPool
+
+    private var pinSound: Int = 0
 
     private var mapReady = false
 
@@ -68,6 +75,9 @@ class MapFragment : Fragment() {
             ViewModelFactory(activity.application)
         ).get(MainViewModel::class.java)
 
+        initSound()
+        loadSounds()
+
         viewModel.getLocationData()
             .observe(
                 activity
@@ -80,11 +90,36 @@ class MapFragment : Fragment() {
 
     private fun setMapClickEvent() {
         googleMap.setOnMapClickListener {
-            // TODO: Dodati sound
+            playSound(pinSound)
             googleMap.addMarker(
                 MarkerOptions().position(it).title("Marker")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
             )
         }
+    }
+
+    private fun initSound() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val audioAttributes = AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .setFlags(AudioAttributes.FLAG_AUDIBILITY_ENFORCED)
+                .setUsage(AudioAttributes.USAGE_GAME)
+                .build()
+
+            soundPool = SoundPool.Builder()
+                .setMaxStreams(5)
+                .setAudioAttributes(audioAttributes)
+                .build()
+        } else {
+            soundPool = SoundPool(5, AudioManager.STREAM_MUSIC, 0)
+        }
+    }
+
+    private fun loadSounds() {
+        pinSound = soundPool.load(context, R.raw.pin_sound, 1);
+    }
+
+    private fun playSound(sound: Int) {
+        soundPool.play(sound, 1f,1f, 0 ,0, 1f)
     }
 }
