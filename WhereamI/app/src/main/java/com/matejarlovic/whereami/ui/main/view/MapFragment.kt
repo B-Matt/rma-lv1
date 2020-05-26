@@ -1,4 +1,10 @@
-package com.matejarlovic.whereami
+/*
+ * Created by Matej Arlović
+ * Copyright (c)  $today.yea. All rights reserved.
+ */
+
+
+package com.matejarlovic.whereami.ui.main.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,6 +21,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.matejarlovic.whereami.R
 import com.matejarlovic.whereami.ui.base.ViewModelFactory
 import com.matejarlovic.whereami.ui.main.viewmodel.MainViewModel
 
@@ -75,7 +82,8 @@ class MapFragment : Fragment() {
         googleMap.setOnMapClickListener {
             // TODO: Dodati sound
             googleMap.addMarker(
-                MarkerOptions().position(it).title("Marker").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                MarkerOptions().position(it).title("Marker")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
             )
         }
     }

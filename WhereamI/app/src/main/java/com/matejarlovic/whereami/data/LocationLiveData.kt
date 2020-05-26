@@ -1,3 +1,8 @@
+/*
+ * Created by Matej Arlović
+ * Copyright (c) 2020. All rights reserved.
+ */
+
 package com.matejarlovic.whereami.data
 
 import android.annotation.SuppressLint

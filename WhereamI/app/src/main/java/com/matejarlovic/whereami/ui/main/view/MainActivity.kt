@@ -1,9 +1,13 @@
+/*
+ * Created by Matej Arlović
+ * Copyright (c) 2020. All rights reserved.
+ */
+
+
 package com.matejarlovic.whereami.ui.main.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.google.android.gms.maps.SupportMapFragment
-import com.matejarlovic.whereami.MapFragment
 import com.matejarlovic.whereami.R
 
 class MainActivity : AppCompatActivity() {

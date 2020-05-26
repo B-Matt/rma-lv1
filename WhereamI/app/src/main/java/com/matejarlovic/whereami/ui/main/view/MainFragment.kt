@@ -1,3 +1,8 @@
+/*
+ * Created by Matej Arlović
+ * Copyright (c) 2020. All rights reserved.
+ */
+
 package com.matejarlovic.whereami.ui.main.view
 
 import android.Manifest
@@ -79,7 +84,8 @@ class MainFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val activity: FragmentActivity = activity ?: throw IllegalArgumentException("Activity is null!")
+        val activity: FragmentActivity =
+            activity ?: throw IllegalArgumentException("Activity is null!")
         val context = context ?: throw IllegalArgumentException("Context is null!")
 
         viewModel = ViewModelProvider(
@@ -104,7 +110,7 @@ class MainFragment : Fragment() {
         val context = context ?: throw IllegalArgumentException("Context is null!")
         cameraButton.setOnClickListener {
             try {
-                if(isCameraPermissionsGranted()) {
+                if (isCameraPermissionsGranted()) {
 
                     Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
                         takePictureIntent.resolveActivity(context.packageManager)?.also {
@@ -126,8 +132,7 @@ class MainFragment : Fragment() {
                             }
                         }
                     }
-                }
-                else {
+                } else {
                     ActivityCompat.requestPermissions(
                         activity as AppCompatActivity,
                         arrayOf(
@@ -136,8 +141,7 @@ class MainFragment : Fragment() {
                         CAMERA_REQUEST
                     )
                 }
-            }
-            catch (e: Exception) {
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
@@ -157,10 +161,12 @@ class MainFragment : Fragment() {
         }
     }
 
+    // Camera Utils
     @Throws(IOException::class)
     private fun createImageFile(): File {
         val context = context ?: throw IllegalArgumentException("Context is null!")
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val timeStamp: String =
+            SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val storageDir: File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         return File.createTempFile(
             "JPEG_${timeStamp}_",
@@ -171,6 +177,16 @@ class MainFragment : Fragment() {
         }
     }
 
+    private fun isCameraPermissionsGranted(): Boolean {
+        val context = context ?: throw IllegalArgumentException("Context is null!")
+        return ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.CAMERA
+        ) ==
+                PackageManager.PERMISSION_GRANTED
+    }
+
+    // Location Utils
     private fun invokeLocationAction() {
         when {
             !isGSPEnabled -> return
@@ -189,7 +205,8 @@ class MainFragment : Fragment() {
     }
 
     private fun startLocationUpdate() {
-        val activity: FragmentActivity = activity ?: throw IllegalArgumentException("Activity is null!")
+        val activity: FragmentActivity =
+            activity ?: throw IllegalArgumentException("Activity is null!")
         viewModel.getLocationData()
             .observe(
                 activity
@@ -209,15 +226,6 @@ class MainFragment : Fragment() {
                 PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
             context,
             Manifest.permission.ACCESS_COARSE_LOCATION
-        ) ==
-                PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun isCameraPermissionsGranted(): Boolean {
-        val context = context ?: throw IllegalArgumentException("Context is null!")
-        return ActivityCompat.checkSelfPermission(
-            context,
-            Manifest.permission.CAMERA
         ) ==
                 PackageManager.PERMISSION_GRANTED
     }
